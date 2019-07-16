@@ -1,0 +1,24 @@
+This is a docker-sync setup for running the build locally inside docker containers on a mac
+
+1. Ensure that you change the volume name in both the docker-sync file and the docker-compose file for every branch
+2. After the modified docker-sync and docker-compose files are in place (deployment/docker/dev/) run docker-sync start first and then run create.sh
+3. Add the following aliases to zshrc:
+# Docker Aliases
+alias stop5.1='( cd ~/rubrik/workspaces/5.1/sdmain/deployment/docker/dev && docker-sync stop && ./stop.sh )'
+alias stopmaster='( cd ~/rubrik/workspaces/master/sdmain/deployment/docker/dev && docker-sync stop && ./stop.sh )'
+
+alias start5.1='( cd ~/rubrik/workspaces/5.1/sdmain/deployment/docker/dev && docker-sync start && ./start.sh )'
+alias startmaster='( cd ~/rubrik/workspaces/master/sdmain/deployment/docker/dev && docker-sync start && ./start.sh )'
+
+alias exec5.1='~/rubrik/workspaces/5.1/sdmain/deployment/docker/dev/exec.sh'
+alias execmaster='~/rubrik/workspaces/master/sdmain/deployment/docker/dev/exec.sh'
+
+alias status5.1='~/workspaces/5.1/sdmain/deployment/docker/dev/status.sh'
+alias statusmaster='~/workspaces/master/sdmain/deployment/docker/dev/status.sh'
+
+alias go5.1='start5.1 && exec5.1'
+alias gomaster='startmaster && execmaster'
+
+NOTE: Every time you start docker-sync or run start.sh make sure that the docker-compose file is still the modified version. Changing branches or running git pull will throw
+git errors saying that the file has been changed. I still haven't found a good way to deal with these errors. Usually just stash my change and then pop it. However
+to get rid of the annoying warning I have been using `git update-index --assume-unchanged docker-compose.yml` and then I have also added the docker-sync.yml file to my .git/info/exclude

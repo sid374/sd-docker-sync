@@ -1,0 +1,27 @@
+version: '2'
+services:
+  ubuntu:
+    build:
+      context: .
+      args:
+       - USERID  # Using this format means docker-compose gets the value from
+                 # the environment, but also doesn't give an error if it is
+                 # empty. So we only need to specify it when creating an image.
+    network_mode: host  # Required since we use link-local IPv6
+    working_dir: /home/ubuntu/sdmain
+    volumes:
+     # Using docker sync instead. Look at docker-compose-dev.yml - ../../..:/home/ubuntu/sdmain
+     # - /etc/localtime:/etc/localtime:ro  # Copy host timezone
+     # Copy various configs for convenience.
+     - ubuntu-51-sync:/home/ubuntu/sdmain:nocopy # nocopy is important
+     - ${HOME}/.ssh:/home/ubuntu/.ssh  # Saves us having to set up SSH keys
+                                       # again.
+     - ${HOME}/.arcrc:/home/ubuntu/.arcrc
+     - ${HOME}/.bodega.conf.yml:/home/ubuntu/.bodega.conf.yml
+     - ${HOME}/.rogers.conf.yml:/home/ubuntu/.rogers.conf.yml
+     - ${HOME}/.shared:/home/ubuntu/.shared
+
+
+volumes:
+  ubuntu-51-sync:
+    external: true
